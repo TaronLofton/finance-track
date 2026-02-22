@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>FinanceTrack</h1>
+
+  <input id="description" placeholder="Description">
+  <input id="amount" placeholder="Amount">
+  <button onclick="addTransaction()">Add</button>
+
+  <ul id="list"></ul>
+
+<script>
+async function addTransaction() {
+  const description = document.getElementById("description").value;
+  const amount = document.getElementById("amount").value;
+
+  await fetch('/transactions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ description, amount })
+  });
+
+  loadTransactions();
+document.getElementById("description").value = "";
+document.getElementById("amount").value = "";
+
+}
+
+async function loadTransactions() {
+  const res = await fetch('/transactions');
+  const data = await res.json();
+
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  data.forEach(t => {
+    const li = document.createElement("li");
+    li.textContent = t.description + " - $" + t.amount;
+    list.appendChild(li);
+  });
+}
+
+loadTransactions();
+</script>
+
+</body>
+</html>
