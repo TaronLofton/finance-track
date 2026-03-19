@@ -34,10 +34,23 @@ async function loadTransactions() {
   list.innerHTML = "";
 
   data.forEach(t => {
-    const li = document.createElement("li");
-    li.textContent = t.description + " - $" + t.amount;
-    list.appendChild(li);
-  });
+  const li = document.createElement("li");
+
+  li.textContent = t.description + " - $" + t.amount + " ";
+
+  const btn = document.createElement("button");
+  btn.textContent = "Delete";
+
+  btn.onclick = async () => {
+    await fetch('/transactions/' + t.id, {
+      method: 'DELETE'
+    });
+    loadTransactions();
+  };
+
+  li.appendChild(btn);
+  list.appendChild(li);
+});
 }
 
 loadTransactions();
